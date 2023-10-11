@@ -1,3 +1,8 @@
+/*
+* Main App screen
+* @author tranhungnhat
+*/
+
 import React, {useState} from 'react';
 // import { StatusBar } from 'expo-status-bar';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView, StatusBar, Appearance } from 'react-native';
@@ -7,53 +12,45 @@ export default function App() {
   
   StatusBar.setBarStyle('light-content', true);
 
+  // useState for handleAddTask function
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
-  const [strikeThrough, setStrikeThrough] = useState(false);
 
+  //add task func
   const handleAddTask = () => {
     Keyboard.dismiss();
     setTaskItems([...taskItems, task])
     setTask(null);
-
   }
 
+  //delete task func
   const deleteTask = (index) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
   }
 
-  const toggleStrikeThrough = (index) => {
-    setStrikeThrough(!strikeThrough);
-  };
-
 
   return (
     <View style={styles.container}>
 
-      {/* Added this scroll view to enable scrolling when list gets longer than the page */}
+      {/* ScrollView for scrollable app */}
       <ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
 
-      {/* Todo App */}
+      {/* Main title and main screen */}
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>To-Do App</Text>
-
+        <Text style={styles.sectionTitle}>To-Do App by NhatTH</Text>
         <View style={styles.items}>
-          {/* This is where the tasks will go! */}
+          {/* Display the tasks */}
           {
             taskItems.map((item, index) => {
               return (
                 <TouchableOpacity
-                style = {
-                    strikeThrough ? styles.strikeThroughTask : styles.normalTask
-                }
+                style = {styles.container}
                 key={index}
-                onPress={() => toggleStrikeThrough(index)}
                 onLongPress={() => deleteTask(index)}>
                   <Task key={index} text={item} />
                 </TouchableOpacity>
-
               )
             })
           }
@@ -62,7 +59,7 @@ export default function App() {
       </View>
       </ScrollView>
       
-      {/* Write a task */}
+      {/* Add task UI part */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.writeTaskWrapper}
@@ -81,7 +78,7 @@ export default function App() {
   );
 }
 
-//Colors for the themes
+//StyleSheet for the Dark/Light-Mode
 const darkMode = {
   backgroundColor: '#1D3557',
   primaryColor: '#F1FAEE',
@@ -96,7 +93,7 @@ const lightMode = {
   accentColor: '#E63946',
 };
 
-// Find out what the current theme is using appearance
+// Get the current Dark/Light-Mode
 
 let theme = Appearance.getColorScheme();
 if (theme === 'dark') {
@@ -116,14 +113,14 @@ const styles = StyleSheet.create({
   },
 
   tasksWrapper: {
-    paddingTop: 80,
+    paddingTop: 75,
     paddingHorizontal: 20,
   },
 
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    paddingBottom: 10,
+    paddingBottom: 30,
     color: theme.primaryColor,
   },
 
@@ -173,17 +170,6 @@ const styles = StyleSheet.create({
     color: currentTheme.primaryColor,
     fontWeight: 'bold',
     alignSelf: 'center',
-  },
-
-  strikeThroughTask: {
-    fontSize: 20,
-    textDecorationLine: "line-through",
-    color: "red", 
-  },
-
-  normalTask: {
-    fontSize: 20,
-    color: "blue",
   },
 
 });
